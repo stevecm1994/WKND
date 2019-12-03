@@ -26,9 +26,9 @@ import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
-import com.adobe.aem.core.SolrSearchService;
-import com.adobe.aem.core.SolrServerConfiguration;
-import com.adobe.aem.core.utils.SolrUtils;
+import com.adobe.aem.guides.wknd.core.SolrSearchService;
+import com.adobe.aem.guides.wknd.core.SolrServerConfiguration;
+import com.adobe.aem.guides.wknd.core.utils.SolrUtils;
 import com.day.cq.search.PredicateGroup;
 import com.day.cq.search.Query;
 import com.day.cq.search.QueryBuilder;
@@ -92,28 +92,96 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 	@Override
 	public JSONArray createPageMetadataArray(SearchResult results) throws RepositoryException {
 		// TODO Auto-generated method stub
-		return null;
+		JSONArray solrDocs = new JSONArray();
+        for (Hit hit : results.getHits()) {
+            Resource pageContent = hit.getResource();
+            ValueMap properties = pageContent.adaptTo(ValueMap.class);
+            String isPageIndexable = properties.get("notsolrindexable",
+                    String.class);
+            if (null != isPageIndexable && isPageIndexable.equals("true"))
+                continue;
+            JSONObject propertiesMap = createPageMetadataObject(pageContent);
+            solrDocs.put(propertiesMap);
+        }
+ 
+        return solrDocs;
 	}
 
+	
+	
+	
+	/**
+     * This method creates JSONObject which has all the page metadata which is used to index in Solr server
+     * @param It takes resource of type cq:PageContent to extract the page metadata
+     * @return Json object with page's metadata
+     */
 	@Override
 	public JSONObject createPageMetadataObject(Resource pageContent) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> propertiesMap = new HashMap<String, Object>();
+        propertiesMap.put("id", pageContent.getParent().getPath());
+        propertiesMap.put("url", pageContent.getParent().getPath() + ".html");
+        ValueMap properties = pageContent.adaptTo(ValueMap.class);
+        String pageTitle = properties.get("jcr:title", String.class);
+        if (StringUtils.isEmpty(pageTitle)) {
+            pageTitle = pageContent.getParent().getName();
+        }
+        propertiesMap.put("title", pageTitle);
+        propertiesMap.put("description", SolrUtils.checkNull(properties.get(
+                "jcr:description", String.class)));
+        propertiesMap.put("publishDate", SolrUtils.checkNull(properties.get(
+                "publishdate", String.class)));
+        propertiesMap.put("body","");
+        propertiesMap.put("lastModified", SolrUtils.solrDate(properties.get(
+                "cq:lastModified", Calendar.class)));
+        propertiesMap.put("contentType", "page");
+        propertiesMap.put("tags", SolrUtils.getPageTags(pageContent));
+        return new JSONObject(propertiesMap);
 	}
 
 	@Override
 	public boolean indexPageToSolr(JSONObject indexPageData, HttpSolrClient server)
 			throws JSONException, SolrServerException, IOException {
-		// TODO Auto-generated method stub
-		return false;
+		if (null != indexPageData) {
+            SolrInputDocument doc = createPageSolrDoc(indexPageData);
+            server.add(doc);
+            server.commit();
+            return true;
+        }
+ 
+        return false;
 	}
 
 	@Override
 	public boolean indexPagesToSolr(JSONArray indexPageData, HttpSolrClient server)
 			throws JSONException, SolrServerException, IOException {
-		// TODO Auto-generated method stub
-		return false;
+		if (null != indexPageData) {
+			 
+            for (int i = 0; i < indexPageData.length(); i++) {
+                JSONObject pageJsonObject = indexPageData.getJSONObject(i);
+                SolrInputDocument doc = createPageSolrDoc(pageJsonObject);
+                server.add(doc);
+            }
+            server.commit();
+            return true;
+        }
+ 
+        return false;
 	}
+	
+	 private SolrInputDocument createPageSolrDoc(JSONObject pageJsonObject) throws JSONException {
+         
+	        SolrInputDocument doc = new SolrInputDocument();
+	        doc.addField("id", pageJsonObject.get("id"));
+	        doc.addField("title", pageJsonObject.get("title"));
+	        doc.addField("body", pageJsonObject.get("body"));
+	        doc.addField("url", pageJsonObject.get("url"));
+	        doc.addField("description", pageJsonObject.get("description"));
+	        doc.addField("lastModified", pageJsonObject.get("lastModified"));
+	        doc.addField("contentType", pageJsonObject.get("contentType"));
+	        doc.addField("tags", pageJsonObject.get("tags"));
+	        return doc;
+	 
+	    }
 
 	
 }

@@ -599,6 +599,24 @@
 			    <artifactId>org.apache.sling.dynamic-include</artifactId>
 			    <version>3.1.2</version>
             </dependency>
+			
+			<dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.3.2</version>
+                <scope>provided</scope>
+            </dependency>
+			<dependency>
+                <groupId>org.apache.servicemix.bundles</groupId>
+                <artifactId>org.apache.servicemix.bundles.solr-solrj</artifactId>
+                <version>6.2.0_1</version>
+            </dependency>
+			<dependency>
+			   <groupId>org.apache.geronimo.specs</groupId>
+			   <artifactId>geronimo-atinject_1.0_spec</artifactId>
+			   <version>1.0</version>
+			   <scope>provided</scope>
+           </dependency>
         </dependencies>
     </dependencyManagement>
 
