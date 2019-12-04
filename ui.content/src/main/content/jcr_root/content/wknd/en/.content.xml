@@ -4,9 +4,11 @@
     <jcr:content
         cq:contextHubPath="/etc/cloudsettings/default/contexthub"
         cq:contextHubSegmentsPath="/etc/segmentation/contexthub"
+        cq:lastModified="{Date}2019-11-27T00:02:29.715+05:30"
+        cq:lastModifiedBy="admin"
         cq:template="/conf/wknd/settings/wcm/templates/content-page"
         jcr:primaryType="cq:PageContent"
-        jcr:title="English"
+        jcr:title="English1!"
         sling:resourceType="wknd/components/structure/page"
         pageTitle="New Project"
         socialMedia="[facebook]">
@@ -68,6 +70,20 @@
                             jcr:primaryType="nt:unstructured"
                             sling:resourceType="wknd/components/content/image"
                             fileReference="/content/dam/wknd/asset.jpg"/>
+                        <datetime
+                            jcr:created="{Date}2019-11-26T23:14:40.033+05:30"
+                            jcr:createdBy="admin"
+                            jcr:lastModified="{Date}2019-11-26T23:14:40.033+05:30"
+                            jcr:lastModifiedBy="admin"
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="wknd/components/content/datetime"/>
+                        <datetime_961108524
+                            jcr:created="{Date}2019-11-27T00:02:29.708+05:30"
+                            jcr:createdBy="admin"
+                            jcr:lastModified="{Date}2019-11-27T00:02:29.708+05:30"
+                            jcr:lastModifiedBy="admin"
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="wknd/components/content/datetime"/>
                     </item_1>
                     <item_2
                         jcr:primaryType="nt:unstructured"
@@ -136,5 +152,6 @@
                     sling:resourceType="wknd/components/content/sharing"/>
             </responsivegrid>
         </root>
+        <image/>
     </jcr:content>
 </jcr:root>

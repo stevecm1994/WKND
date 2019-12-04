@@ -38,7 +38,7 @@ import com.day.cq.search.result.Hit;
 import com.day.cq.search.result.SearchResult;
 import com.day.cq.search.result.SearchResult;
 
-@Component(service = SolrSearchService.class,immediate = true)
+@Component(service = SolrSearchService.class)
 public class SolrSearchServiceImpl implements SolrSearchService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SolrSearchServiceImpl.class);
@@ -49,8 +49,7 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 	@Reference
 	private SlingRepository repository;
 	
-	@Reference
-    SolrServerConfiguration solrConfigurationService;
+	
 	
 	@Override
 	public JSONArray crawlContent(String resourcePath, String resourceType) {

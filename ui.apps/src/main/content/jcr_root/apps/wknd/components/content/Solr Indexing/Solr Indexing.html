@@ -1,0 +1,39 @@
+<script src="https://code.jquery.com/jquery-3.1.0.js" integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk=" crossorigin="anonymous"></script>
+<h4>This is a basic search component which connects solr to fetch search results</h4>
+Slect the action to perform
+<select name="solrindex" id="solrindex">
+<option value="indexpages">Index Pages</option>
+<option value="deindexpages">Delete Index</option>
+</select>
+</br>
+<input type="button" id="indexing" value="Index/Deindex"/>
+</br>
+<div id="index-result"></div>
+
+
+<script type="application/javascript">
+$( document ).ready(function() {
+        $("#indexing").click(function(){
+            $("#index-result").empty();
+
+
+                var searchTerm = $("#solrindex").val();
+                if(searchTerm== "indexpages")
+              {
+                 $.ajax({
+                     url: "http://localhost:4502/bin/solr/push/pages?indexType="+searchTerm,
+                     type: "GET",
+                     success: function(responseText){
+                         console.log(responseText);
+                         $('#index-result').text(responseText);
+                     },
+                     error: function(){
+                         $("#index-result").append("Something went wrong :( ");
+                         }
+
+                 });
+
+            }
+        });
+    });
+</script>

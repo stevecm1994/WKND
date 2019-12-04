@@ -11,7 +11,7 @@ import com.adobe.aem.guides.wknd.core.SolrServerConfiguration ;
 import com.adobe.aem.guides.wknd.core.MySimpleService; 
   
   
-@Component(service = SolrServerConfiguration.class,configurationPolicy=ConfigurationPolicy.REQUIRE)
+@Component(service = SolrServerConfiguration.class,configurationPolicy=ConfigurationPolicy.REQUIRE)	
 @Designate(ocd = MySimpleService.class)
 public class SolrServerConfigurationImpl implements SolrServerConfiguration {
       
