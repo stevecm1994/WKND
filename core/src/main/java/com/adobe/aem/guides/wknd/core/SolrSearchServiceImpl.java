@@ -8,7 +8,8 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
- 
+import javax.xml.ws.ServiceMode;
+
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -20,6 +21,7 @@ import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.jcr.api.SlingRepository;
+import org.apache.sling.models.annotations.injectorspecific.OSGiService;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
@@ -36,7 +38,7 @@ import com.day.cq.search.result.Hit;
 import com.day.cq.search.result.SearchResult;
 import com.day.cq.search.result.SearchResult;
 
-@Component
+@Component(service = SolrSearchService.class,immediate = true)
 public class SolrSearchServiceImpl implements SolrSearchService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SolrSearchServiceImpl.class);
@@ -50,9 +52,6 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 	@Reference
     SolrServerConfiguration solrConfigurationService;
 	
-	@Reference
-	ResourceResolver resourceResolver;
-
 	@Override
 	public JSONArray crawlContent(String resourcePath, String resourceType) {
 		
@@ -65,7 +64,7 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 		Session session = null;
 		
 		try {
-			session = repository.loginAdministrative(null);
+			session = repository.loginService(null, repository.getDefaultWorkspace());
 			Query query = queryBuilder.createQuery(PredicateGroup.create(params), session);
 			
 			SearchResult searchResults = query.getResult();
