@@ -53,7 +53,7 @@ public class DeleteIndexesFromSolr extends SlingAllMethodsServlet {
             server.deleteByQuery("*:*");
             server.commit();
             server.close();
-            response.getWriter().write("<h3>Deleted all the indexes from solr server </h3>");
+            response.getWriter().write("Deleted all the indexes from solr server ");
         } catch (SolrServerException e) {
             LOG.error("Exception due to", e);
         }

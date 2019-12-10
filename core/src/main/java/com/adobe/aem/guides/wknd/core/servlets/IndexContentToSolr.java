@@ -77,7 +77,7 @@ public class IndexContentToSolr extends SlingAllMethodsServlet {
                 boolean resultindexingPages = solrSearchService.indexPagesToSolr(indexPageData, server);
                 if (resultindexingPages == true) {
                     response.getWriter()
-                            .write("<h3>Successfully indexed content pages to Solr server </h3>");
+                            .write("Successfully indexed content pages to Solr server ");
                 } else {
                     response.getWriter().write("<h3>Something went wrong</h3>");
                 }

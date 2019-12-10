@@ -19,7 +19,7 @@ $( document ).ready(function() {
 
                 var searchTerm = $("#solrindex").val();
                 if(searchTerm== "indexpages")
-              {
+             {
                  $.ajax({
                      url: "http://localhost:4502/bin/solr/push/pages?indexType="+searchTerm,
                      type: "GET",
@@ -34,6 +34,22 @@ $( document ).ready(function() {
                  });
 
             }
+                
+             if(searchTerm=="deindexpages")
+            {
+                	
+                $.ajax({
+                	url: "http://localhost:4502/bin/solr/delete/all/indexes",
+                	type :"POST",
+                	success: function(responseText){
+                		console.log(responseText);
+                		$('#index-result').text(responseText);
+                	},
+                	error : function(){
+                		$("#index-result").append("Something went wrong :( ");
+                	}  	
+                }); 	
+            }    	
         });
     });
 </script>
