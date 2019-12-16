@@ -16,6 +16,7 @@ import org.osgi.service.component.annotations.Reference;
  
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
+import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
@@ -118,19 +119,23 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 		Map<String, Object> propertiesMap = new HashMap<String, Object>();
         propertiesMap.put("id", pageContent.getParent().getPath());
         propertiesMap.put("url", pageContent.getParent().getPath() + ".html");
-        ValueMap properties = pageContent.adaptTo(ValueMap.class);
-        String pageTitle = properties.get("jcr:title", String.class);
+        ValueMap property = ResourceUtil.getValueMap(pageContent);
+        String pageTitle = property.get("jcr:title", String.class);
         if (StringUtils.isEmpty(pageTitle)) {
             pageTitle = pageContent.getParent().getName();
         }
         propertiesMap.put("title", pageTitle);
-        propertiesMap.put("description", SolrUtils.checkNull(properties.get(
+        propertiesMap.put("description", SolrUtils.checkNull(property.get(
                 "jcr:description", String.class)));
-        propertiesMap.put("publishDate", SolrUtils.checkNull(properties.get(
+        LOG.info(property.get("jcr:description", String.class));
+        propertiesMap.put("publishDate", SolrUtils.checkNull(property.get(
                 "publishdate", String.class)));
         propertiesMap.put("body","");
-        propertiesMap.put("lastModified", SolrUtils.solrDate(properties.get(
-                "cq:lastModified", Calendar.class)));
+        //LOG.info(properties.get("cq:lastModified", Calendar.class).toString());
+		/*
+		 * propertiesMap.put("lastModified", SolrUtils.solrDate(properties.get(
+		 * "cq:lastModified", Calendar.class)));
+		 */
         propertiesMap.put("contentType", "page");
         propertiesMap.put("tags", SolrUtils.getPageTags(pageContent));
         return new JSONObject(propertiesMap);
@@ -174,7 +179,7 @@ public class SolrSearchServiceImpl implements SolrSearchService {
 	        doc.addField("body", pageJsonObject.get("body"));
 	        doc.addField("url", pageJsonObject.get("url"));
 	        doc.addField("description", pageJsonObject.get("description"));
-	        doc.addField("lastModified", pageJsonObject.get("lastModified"));
+	        //doc.addField("lastModified", pageJsonObject.get("lastModified"));
 	        doc.addField("contentType", pageJsonObject.get("contentType"));
 	        doc.addField("tags", pageJsonObject.get("tags"));
 	        return doc;

@@ -43,7 +43,11 @@ public final class SolrUtils {
     public static String solrDate(Calendar cal) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "YYYY-MM-DD'T'hh:mm:ss");
-        return dateFormat.format(cal.getTime()) + "Z";
+        if(cal.equals(null)) {
+        return "";
+        }
+        else return dateFormat.format(cal.getTime()) + "Z";
+        	
     }
  
     /**

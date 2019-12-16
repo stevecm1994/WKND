@@ -26,6 +26,7 @@ public class ReplicationListener implements EventHandler {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	//dictates to the JobManager which JobConsumer will be instantiated in line 42
 	private static final String TOPIC = "com/adobe/wknd/core/replicationjob";
+	private static final String TOPIC2 = "com/adobe/wknd/core/replicationjob2";
 	
 	@Reference
 	private JobManager jobManager;
@@ -44,8 +45,9 @@ public class ReplicationListener implements EventHandler {
 					// Create a properties map that contains things we want to pass through the job
 					HashMap<String, Object> jobprops = new HashMap<String, Object>();
 					jobprops.put("PAGE_PATH", action.getPath());
+					logger.info("Event Handler called for replicating " + action.getPath());
 					// Add the job
-					jobManager.addJob(TOPIC, jobprops);
+					jobManager.addJob(TOPIC2, jobprops);
 					logger.info("=============Topic: '"+TOPIC+"' with payload: '"+action.getPath()+"' was added to the Job Manager");
 
 				} catch (Exception e) {

@@ -27,4 +27,6 @@ public interface SolrSearchService {
  
     boolean indexPagesToSolr(JSONArray indexPageData, HttpSolrClient server)
             throws JSONException, SolrServerException, IOException;
+    
+    
 }
