@@ -8,6 +8,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.adobe.aem.guides.wknd.core.utils.SendEmail;
 import com.adobe.granite.workflow.WorkflowException;
 import com.adobe.granite.workflow.WorkflowSession;
 import com.adobe.granite.workflow.exec.WorkItem;
@@ -32,6 +33,9 @@ public class SendEmailForDelete implements WorkflowProcess {
 	
 	@Reference
 	private MessageGatewayService messageGatewayService;
+	
+	@Reference
+	private SendEmail emailUtil;
 
 	@Override
 	public void execute(WorkItem item, WorkflowSession session, MetaDataMap arg2) 
@@ -39,26 +43,10 @@ public class SendEmailForDelete implements WorkflowProcess {
 		
 		
 		try {
-			
-			MessageGateway<Email> messageGateway; 
-			
-			Email email = new SimpleEmail();
 			WorkflowData workflowData = item.getWorkflowData();
 			String deletedPath = workflowData.getPayload().toString();
-			
-			String emailToRecipients = "steve.mathews@publicissapient.com";
-			
-			email.addTo(emailToRecipients);
-			email.setSubject("AEM Custom Step");
-		    email.setFrom("stevecm1994@gmail.com"); 
-		    email.setMsg("This message is to inform you that the CQ content at path "+ deletedPath + " has been deleted");
-		    
-		    //Here messageGateway object initialised using messageGatewayService injected using @refernce
-		    //Inject a MessageGateway Service and send the message
-		    messageGateway = messageGatewayService.getGateway(Email.class);
-		  
-		    // Check the logs to see that messageGateway is not null
-		    messageGateway.send((Email) email);
+		    String message = "This message is to inform you that the CQ content at path " + deletedPath + " has been deleted";
+		    emailUtil.sendEmail(message);
 			
 		} catch (Exception e) {
 			e.printStackTrace()  ; 
